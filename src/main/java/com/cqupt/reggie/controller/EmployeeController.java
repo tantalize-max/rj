@@ -9,12 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
-@RestController("/employee")
+@RestController
+@RequestMapping("/employee")
 public class EmployeeController {
 
     @Autowired
@@ -43,7 +45,7 @@ public class EmployeeController {
             return R.error("登录失败");
         }
         if(emp.getStatus() == '0'){
-            return R.error("登录失败");
+            return R.error("账号已禁用");
         }
         //成功时 返回对象
         request.getSession().setAttribute("employee",emp.getId());
