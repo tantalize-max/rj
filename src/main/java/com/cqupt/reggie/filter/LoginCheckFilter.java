@@ -1,9 +1,8 @@
 package com.cqupt.reggie.filter;
 
 import com.alibaba.fastjson.JSON;
+import com.cqupt.reggie.common.BaseContext;
 import com.cqupt.reggie.common.R;
-import com.sun.deploy.net.HttpResponse;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.AntPathMatcher;
 
@@ -39,6 +38,9 @@ public class LoginCheckFilter implements Filter {
         //2、判断本次请求是否需要处理
         boolean check = checkUrl(urls, requestURI);
         if (check) {
+            log.info("用户已登录，用户id为：{}", request.getSession().getAttribute("employee"));
+            Long empId= (Long) request.getSession().getAttribute("employee");
+            BaseContext.setCurrentId(empId);
             filterChain.doFilter(request, response);
             return;
         }
