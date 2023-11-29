@@ -104,6 +104,7 @@ public class EmployeeController {
     @GetMapping("/{id}")
     public R<Employee> getById(@PathVariable Long id){
         log.info("更据Id查询员工信息");
+        //Employee employee = employeeService.getById(id);
         Employee employee = employeeService.getById(id);
         if(employee != null){
             return R.success(employee);
