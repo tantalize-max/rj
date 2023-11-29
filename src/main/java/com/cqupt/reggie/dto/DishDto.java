@@ -11,6 +11,7 @@ import java.util.List;
 public class DishDto extends Dish {
     private List<DishFlavor> flavors = new ArrayList<>();
 
+    //对应的前端
     private String categoryName;
 
     private Integer copies;
