@@ -86,4 +86,16 @@ public class DishController {
         return R.success("修改成功");
     }
 
+    @GetMapping("/list")
+    public R<List<Dish>> list(Dish dish){
+        LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
+        //更据传进来的categoryId查询
+        queryWrapper.eq(dish.getCategoryId() != null,Dish::getCategoryId,dish.getCategoryId());
+        //只查询状态为1的菜品（起售菜品）
+        queryWrapper.eq(Dish::getStatus,1);
+        queryWrapper.orderByAsc(Dish::getSort).orderByDesc(Dish::getUpdateTime);
+        //获取查询到的结果作为返回值
+        List<Dish> list = dishService.list(queryWrapper);
+        return R.success(list);
+    }
 }
