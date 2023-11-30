@@ -41,6 +41,7 @@ public class LoginCheckFilter implements Filter {
             log.info("用户已登录，用户id为：{}", request.getSession().getAttribute("employee"));
             Long empId= (Long) request.getSession().getAttribute("employee");
             BaseContext.setCurrentId(empId);
+            log.info("当前empId为：{}",empId);
             filterChain.doFilter(request, response);
             return;
         }

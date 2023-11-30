@@ -96,6 +96,7 @@ public class EmployeeController {
 
         Long empId = (Long)request.getSession().getAttribute("employee");
         employee.setUpdateTime(LocalDateTime.now());
+        log.info("empId:{}",empId);
         employee.setUpdateUser(empId);
         employeeService.updateById(employee);
 
