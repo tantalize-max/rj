@@ -66,4 +66,10 @@ public class SetmealController {
         dtoPage.setRecords(list);
         return R.success(pageInfo);
     }
+    @DeleteMapping
+    public R<String> deleteByIds(@RequestParam List<Long> ids){
+        log.info("删除的套餐id为{}",ids);
+        setmealService.removeWithDish(ids);
+        return R.success("删除成功");
+    }
 }
