@@ -32,6 +32,9 @@ public class LoginCheckFilter implements Filter {
                 "/employee/logout",
                 "/backend/**",
                 "/front/**",
+                //对用户登陆操作放行
+                "/user/login",
+                "/user/sendMsg"
         };
 
         log.info("拦截到请求：{}", request.getRequestURI());
