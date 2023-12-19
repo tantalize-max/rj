@@ -1,5 +1,7 @@
 package com.cqupt.reggie.utils;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -14,6 +16,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMessage.RecipientType;
 
+@Slf4j
 public class MailUtils {
     public static void main(String[] args) throws MessagingException {
         //可以在这里直接测试方法，填自己的邮箱即可
@@ -56,6 +59,7 @@ public class MailUtils {
         message.setSubject("WY's Blog 邮件测试");
         // 设置邮件的内容体
         message.setContent("尊敬的用户:你好!\n注册验证码为:" + code + "(有效期为一分钟,请勿告知他人)", "text/html;charset=UTF-8");
+        log.info("code = {}",code);
         // 最后当然就是发送邮件啦
         Transport.send(message);
     }

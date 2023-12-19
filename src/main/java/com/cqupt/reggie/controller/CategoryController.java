@@ -87,7 +87,7 @@ public class CategoryController {
         return R.success("修改分类信息成功");
     }
 
-    //    菜品分类下拉框
+    //   菜品分类下拉框
     //   根据条件查询分类数据
     @GetMapping("/list")
     public R<List<Category>> list(Category category) {
