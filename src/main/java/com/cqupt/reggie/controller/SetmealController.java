@@ -66,6 +66,17 @@ public class SetmealController {
         dtoPage.setRecords(list);
         return R.success(pageInfo);
     }
+    @PostMapping("/status/{status}")
+    public R<String> modifyStatus(@PathVariable("status") Integer status,@RequestParam List<Long> ids){
+        log.info("修改的套餐ids为{}",ids);
+        setmealService.modifyStatusById(status,ids);
+        return R.success("套餐状态修改成功");
+    }
+
+    /**
+     * @param ids 删除套餐
+     * @return {@link R}<{@link String}>
+     */
     @DeleteMapping
     public R<String> deleteByIds(@RequestParam List<Long> ids){
         log.info("删除的套餐id为{}",ids);

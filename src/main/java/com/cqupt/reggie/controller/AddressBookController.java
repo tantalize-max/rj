@@ -2,6 +2,7 @@ package com.cqupt.reggie.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.cqupt.reggie.common.BaseContext;
 import com.cqupt.reggie.common.R;
 import com.cqupt.reggie.entity.AddressBook;
@@ -55,6 +56,19 @@ public class AddressBookController {
         addressBook.setIsDefault(1);
         //update
         addressBookService.updateById(addressBook);
+        return R.success(addressBook);
+    }
+    @GetMapping("/default")
+    public R<AddressBook> defaultAddress(){
+        //获取当前用户ID
+        Long userId = BaseContext.getCurrentId();
+        //条件构造
+        LambdaQueryWrapper<AddressBook> queryWrapper = new LambdaQueryWrapper<>();
+        //当前用户
+        queryWrapper.eq(userId != null ,AddressBook::getUserId, userId);
+        //默认地址
+        queryWrapper.eq(AddressBook::getIsDefault,1);
+        AddressBook addressBook = addressBookService.getOne(queryWrapper);
         return R.success(addressBook);
     }
 }

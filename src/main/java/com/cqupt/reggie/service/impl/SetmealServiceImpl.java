@@ -38,8 +38,8 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
         //判读是否能删除，如果status为1，则在售，不能删除
         //select * from setmeal where id in (ids) and status = 1
         LambdaQueryWrapper<Setmeal> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.in(Setmeal::getId,ids);
-        queryWrapper.eq(Setmeal::getStatus,1);
+        queryWrapper.in(Setmeal::getId, ids);
+        queryWrapper.eq(Setmeal::getStatus, 1);
         int count = this.count(queryWrapper);
         if (count > 0) {
             throw new CustomException("套餐正在售卖，请先停售再进行删除");
@@ -48,7 +48,20 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
         this.removeByIds(ids);
         //继续删除
         LambdaQueryWrapper<SetmealDish> setmealDishLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        setmealDishLambdaQueryWrapper.in(SetmealDish::getDishId,ids);
+        setmealDishLambdaQueryWrapper.in(SetmealDish::getDishId, ids);
         setmealDishService.remove(setmealDishLambdaQueryWrapper);
+    }
+
+    @Override
+    public void modifyStatusById(Integer status, List<Long> ids) {
+        LambdaQueryWrapper<Setmeal> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(ids != null, Setmeal::getId, ids);
+        List<Setmeal> list = this.list(queryWrapper);
+        for (Setmeal setmeal : list) {
+            if(setmeal != null ){
+                setmeal.setStatus(status);
+                this.updateById(setmeal);
+            }
+        }
     }
 }

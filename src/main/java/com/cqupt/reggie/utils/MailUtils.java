@@ -20,7 +20,7 @@ import javax.mail.internet.MimeMessage.RecipientType;
 public class MailUtils {
     public static void main(String[] args) throws MessagingException {
         //可以在这里直接测试方法，填自己的邮箱即可
-        sendTestMail("2012204737@qq.com", new MailUtils().achieveCode());
+        sendTestMail("3334355244@qq.com", new MailUtils().achieveCode());
     }
 
     public static void sendTestMail(String email, String code) throws MessagingException {
@@ -33,9 +33,9 @@ public class MailUtils {
         //端口号，QQ邮箱端口587
         props.put("mail.smtp.port", "587");
         // 此处填写，写信人的账号
-        props.put("mail.user", "2012204737@qq.com");
+        props.put("mail.user", "3334355244@qq.com");
         // 此处填写16位STMP口令
-        props.put("mail.password", "panfxozzembbbgba");
+        props.put("mail.password", "ikpmzuiyxzzndbgi");
         // 构建授权信息，用于进行SMTP进行身份验证
         Authenticator authenticator = new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {

@@ -3,16 +3,15 @@ package com.cqupt.reggie.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.cqupt.reggie.common.BaseContext;
 import com.cqupt.reggie.common.R;
+import com.cqupt.reggie.entity.Setmeal;
 import com.cqupt.reggie.entity.ShoppingCart;
 import com.cqupt.reggie.service.ShoppingCartService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -26,6 +25,7 @@ public class ShoppingCartController {
         log.info("购物车信息：{}",shoppingCart);
         //获取当前用户id
         Long currentId = BaseContext.getCurrentId();
+        log.info("当前用户ID为:{}",currentId);
         //设置当前用户id
         shoppingCart.setUserId(currentId);
         //获取当前菜品id
@@ -55,4 +55,18 @@ public class ShoppingCartController {
         }
         return R.success(cartServiceOne);
     }
+    @GetMapping("/list")
+    public R<List<ShoppingCart>> list() {
+        LambdaQueryWrapper<ShoppingCart> queryWrapper = new LambdaQueryWrapper<>();
+        Long userId = BaseContext.getCurrentId();
+        queryWrapper.eq(ShoppingCart::getUserId,userId);
+        List<ShoppingCart> shoppingCartList = shoppingCartService.list(queryWrapper);
+        return R.success(shoppingCartList);
+    }
+    @PostMapping("/sub")
+    public R<ShoppingCart> sub(@RequestBody ShoppingCart shoppingCart){
+
+        return null;
+    }
+
 }
