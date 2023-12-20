@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.cqupt.reggie.common.BaseContext;
+import com.cqupt.reggie.common.CustomException;
 import com.cqupt.reggie.common.R;
 import com.cqupt.reggie.entity.AddressBook;
 import com.cqupt.reggie.service.AddressBookService;
@@ -70,5 +71,33 @@ public class AddressBookController {
         queryWrapper.eq(AddressBook::getIsDefault,1);
         AddressBook addressBook = addressBookService.getOne(queryWrapper);
         return R.success(addressBook);
+    }
+    @GetMapping("/{id}")
+    public R<AddressBook> getById(@PathVariable Long id) {
+        AddressBook addressBook = addressBookService.getById(id);
+        if (addressBook == null){
+            throw new CustomException("地址信息不存在");
+        }
+        return R.success(addressBook);
+    }
+    @PutMapping
+    public R<String> updateAdd(@RequestBody AddressBook addressBook) {
+        if (addressBook == null) {
+            throw new CustomException("地址信息不存在，请刷新重试");
+        }
+        addressBookService.updateById(addressBook);
+        return R.success("地址修改成功");
+    }
+    @DeleteMapping()
+    public R<String> deleteAdd(@RequestParam("ids") Long id) {
+        if (id == null) {
+            throw new CustomException("地址信息不存在，请刷新重试");
+        }
+        AddressBook addressBook = addressBookService.getById(id);
+        if (addressBook == null) {
+            throw new CustomException("地址信息不存在，请刷新重试");
+        }
+        addressBookService.removeById(id);
+        return R.success("地址删除成功");
     }
 }

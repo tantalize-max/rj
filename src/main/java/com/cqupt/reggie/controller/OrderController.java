@@ -7,14 +7,18 @@ import com.cqupt.reggie.common.R;
 import com.cqupt.reggie.dto.OrdersDto;
 import com.cqupt.reggie.entity.OrderDetail;
 import com.cqupt.reggie.entity.Orders;
+import com.cqupt.reggie.entity.ShoppingCart;
 import com.cqupt.reggie.service.OrderDetailService;
 import com.cqupt.reggie.service.OrdersService;
+import com.cqupt.reggie.service.ShoppingCartService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -26,6 +30,9 @@ public class OrderController {
     private OrdersService ordersService;
     @Autowired
     private OrderDetailService ordersDetailService;
+
+    @Autowired
+    private ShoppingCartService shoppingCartService;
 
     @PostMapping("/submit")
     public R<String> submit(@RequestBody Orders orders){
@@ -64,5 +71,30 @@ public class OrderController {
         //日志输出看一下
         log.info("list:{}", list);
         return R.success(ordersDtoPage);
+    }
+    @PostMapping("/again")
+    public R<String> again(@RequestBody Map<String,String> map){
+        //获取order_id
+        Long orderId = Long.valueOf(map.get("id"));
+        //条件构造器
+        LambdaQueryWrapper<OrderDetail> queryWrapper = new LambdaQueryWrapper<>();
+        //查询订单的口味细节数据
+        queryWrapper.eq(OrderDetail::getOrderId,orderId);
+        List<OrderDetail> details = ordersDetailService.list(queryWrapper);
+        //获取用户id，待会需要set操作
+        Long userId = BaseContext.getCurrentId();
+        List<ShoppingCart> shoppingCarts = details.stream().map((item) ->{
+            ShoppingCart shoppingCart = new ShoppingCart();
+            //Copy对应属性值
+            BeanUtils.copyProperties(item,shoppingCart);
+            //设置一下userId
+            shoppingCart.setUserId(userId);
+            //设置一下创建时间为当前时间
+            shoppingCart.setCreateTime(LocalDateTime.now());
+            return shoppingCart;
+        }).collect(Collectors.toList());
+        //加入购物车
+        shoppingCartService.saveBatch(shoppingCarts);
+        return R.success("喜欢吃就再来一单吖~");
     }
 }
