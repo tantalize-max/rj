@@ -128,4 +128,49 @@ public class SetmealController {
         }).collect(Collectors.toList());
         return R.success(dtoList);
     }
+    /**
+     * 套餐回显
+     */
+    @GetMapping("/{id}")
+    public R<SetmealDto> getById(@PathVariable Long id) {
+        Setmeal setmeal = setmealService.getById(id);
+        SetmealDto setmealDto = new SetmealDto();
+        //拷贝数据
+        BeanUtils.copyProperties(setmeal, setmealDto);
+        //条件构造器
+        LambdaQueryWrapper<SetmealDish> queryWrapper = new LambdaQueryWrapper<>();
+        //根据setmealId查询具体的setmealDish
+        queryWrapper.eq(SetmealDish::getSetmealId, id);
+        List<SetmealDish> setmealDishes = setmealDishService.list(queryWrapper);
+        //然后再设置属性
+        setmealDto.setSetmealDishes(setmealDishes);
+        //作为结果返回
+        return R.success(setmealDto);
+    }
+    /**
+     * 套餐保存
+     */
+    @PutMapping
+    public R<Setmeal> updateWithDish(@RequestBody SetmealDto setmealDto){
+        List<SetmealDish> setmealDishes = setmealDto.getSetmealDishes();
+
+        Long setmealId = setmealDto.getId();
+        //更据id把setmealDish表中对应的套餐数据删除了
+        LambdaQueryWrapper<SetmealDish> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SetmealDish::getSetmealId,setmealId);
+        setmealDishService.remove(queryWrapper);
+        //然后重新添加
+        setmealDishes.stream().map((item)->{
+            //这属性没有,手动设置一下
+            log.info("xxxxxxx:{}",item.getId());
+            item.setSetmealId(setmealId);
+            log.info("xxxxxxxyyyyyyyyyy:{}",item.getId());
+            return item;
+        }).collect(Collectors.toList());
+        //更新套餐数据
+        setmealService.updateById(setmealDto);
+        //更新套餐对应菜品数据
+        setmealDishService.saveBatch(setmealDishes);
+        return R.success(setmealDto);
+    }
 }

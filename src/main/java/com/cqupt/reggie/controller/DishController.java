@@ -3,6 +3,7 @@ package com.cqupt.reggie.controller;
 import com.alibaba.druid.util.StringUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.cqupt.reggie.common.CustomException;
 import com.cqupt.reggie.common.R;
 import com.cqupt.reggie.dto.DishDto;
 import com.cqupt.reggie.entity.Category;
@@ -143,5 +144,24 @@ public class DishController {
             return dishDto;
         }).collect(Collectors.toList());
         return R.success(dishDtoList);
+    }
+    @PostMapping("/status/{status}")
+    public R<String> status(@PathVariable("status") Integer status,@RequestParam List<Long> ids){
+        log.info("修改的ids为:{}",ids);
+        dishService.modifyStatusById(status,ids);
+        return R.success("菜品售卖状态修改成功！！！");
+    }
+    @DeleteMapping
+    public R<String> delete(@RequestParam List<Long> ids){
+        log.info("删除的ids为{}",ids);
+        LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(ids != null, Dish::getId, ids);
+        queryWrapper.eq(Dish::getStatus,1);
+        int count = dishService.count(queryWrapper);
+        if (count > 0) {
+            throw new CustomException("存在在售卖商品不能直接删除");
+        }
+        dishService.removeByIds(ids);
+        return R.success("删除成功！！！");
     }
 }

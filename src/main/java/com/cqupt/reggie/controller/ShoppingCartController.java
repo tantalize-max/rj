@@ -8,6 +8,7 @@ import com.cqupt.reggie.entity.ShoppingCart;
 import com.cqupt.reggie.service.ShoppingCartService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -64,6 +65,7 @@ public class ShoppingCartController {
         return R.success(shoppingCartList);
     }
     @PostMapping("/sub")
+    @Transactional
     public R<ShoppingCart> sub(@RequestBody ShoppingCart shoppingCart) {
         Long dishId = shoppingCart.getDishId();
         Long setmealId = shoppingCart.getSetmealId();
