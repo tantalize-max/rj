@@ -34,7 +34,12 @@ public class LoginCheckFilter implements Filter {
                 "/front/**",
                 //对用户登陆操作放行
                 "/user/login",
-                "/user/sendMsg"
+                "/user/sendMsg",
+                //文档相关urls
+                "/doc.html",
+                "/webjars/**",
+                "/swagger-resources",
+                "/v2/api-docs"
         };
 
         log.info("拦截到请求：{}", request.getRequestURI());
