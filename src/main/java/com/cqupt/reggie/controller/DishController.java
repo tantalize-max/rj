@@ -51,7 +51,7 @@ public class DishController {
         //构造分页构造器
         Page<Dish> pageInfo = new Page<>(page, pageSize);
 
-        Page<DishDto> dishDtoPage = new Page<>();
+        Page<DishDto> dishDtoPage = new Page<>(page, pageSize);
 
         //构造条件构造器
         LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
